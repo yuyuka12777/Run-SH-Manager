@@ -119,6 +119,4 @@ tests/             # ユニットテスト
 - **`build_deb.sh` で Permission denied が出る**: 既にグローバルにインストールされた `run-sh-manager` に触れないよう、スクリプトは `--ignore-installed` を付与しています。それでも `/usr/local/bin` へのアクセスエラーが出る場合は `sudo pip uninstall run-sh-manager` などで既存インストールを削除するか、仮想環境でビルドしてみてください。
 - **生成された deb が巨大**: `PySide6` (約 190MB) を同梱しているため仕様です。ネットワーク経由で配布する際はファイルサイズに留意してください。
 
-by kayuu(雪癒華)# Run-SH-Manager
-# Run-SH-Manager
-# Run-SH-Manager
+by kayuu(雪癒華)
