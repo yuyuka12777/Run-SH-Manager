@@ -7,37 +7,11 @@ Linux (Ubuntu) 向けにシェルスクリプトを安全に常駐管理する�
 - Ubuntu 22.04 / Linux Mint 21 以降 (他の Debian 系でも動作見込み)
 - Python 3.10 以上 (`python3 --version` で確認)
 - X11 フォワーディング (MobaXterm, VS Code Remote 等で GUI を表示する場合)
-- `python3-pip` (deb ビルド時に使用)
+- `python3-pip` 
 
 ```bash
 sudo apt update
 sudo apt install -y python3 python3-pip python3-venv build-essential
-```
-
-## セットアップと deb 化
-
-### 開発環境で直接動作させる (任意)
-
-```bash
-python3 -m pip install --upgrade pip
-python3 -m pip install -r requirements.txt
-python3 -m pip install -e .
-run-sh-manager
-```
-
-### deb パッケージのビルド
-
-`PySide6` をパッケージ内に同梱するため、初回ビルド時は ~200MB 程度のダウンロードが発生します。
-
-```bash
-# 依存を準備
-sudo apt install -y python3-pip
-
-# プロジェクトルートで実行
-./scripts/build_deb.sh
-
-# dist/run-sh-manager_0.1.0_all.deb が生成される
-ls dist
 ```
 
 ### deb のインストール
@@ -49,9 +23,9 @@ sudo apt install ./run-sh-manager_0.1.0_all.deb
 
 インストール後はアプリメニューから「Run SH Manager」が起動できるほか、ターミナルから `run-sh-manager` でも起動できます。
 
-### アップデート / 再インストール
+### 再インストール
 
-コードを変更したら再度 `./scripts/build_deb.sh` を実行して `.deb` を作り直し、`sudo apt install ./dist/run-sh-manager_0.1.0_all.deb` を実行すると上書きインストールされます。アンインストールは `sudo apt remove run-sh-manager` です。
+`sudo apt install ./dist/run-sh-manager_0.1.0_all.deb` を実行すると上書きインストールされます。アンインストールは `sudo apt remove run-sh-manager` です。
 
 ## 使い方
 
@@ -99,24 +73,10 @@ sudo apt install ./run-sh-manager_0.1.0_all.deb
   `User` や `DISPLAY` は環境に合わせて調整してください。
 - **ログローテーション**: 出力ログは `~/.local/share/run_sh_manager/logs` に保存されます。`logrotate` と連携させる場合は同ディレクトリをターゲットに設定してください。
 
-## ディレクトリ構成
-
-```
-run_sh_manager/
-  backend/         # プロセスマネージャーやプロファイル保存ロジック
-  ui/              # PySide6 ベースの GUI 実装
-scripts/
-  build_deb.sh     # deb パッケージのビルド用ヘルパー
-  install_service.sh (予定)
-tests/             # ユニットテスト
-```
-
 ## トラブルシュート
 
 - **GUI が起動しない / `DISPLAY` エラー**: SSH 経由の場合は `ssh -X` でログインするか、X11 フォワーディングを有効化してください。
 - **スクリプトがすぐ停止する**: スクリプトに実行権限があるか (`chmod +x script.sh`)、または `/bin/bash script.sh` で直接実行できるか確認します。
 - **ログに出力が来ない**: プロファイル編集画面でログパスを確認し、権限と空き容量をチェックしてください。
-- **`build_deb.sh` で Permission denied が出る**: 既にグローバルにインストールされた `run-sh-manager` に触れないよう、スクリプトは `--ignore-installed` を付与しています。それでも `/usr/local/bin` へのアクセスエラーが出る場合は `sudo pip uninstall run-sh-manager` などで既存インストールを削除するか、仮想環境でビルドしてみてください。
-- **生成された deb が巨大**: `PySide6` (約 190MB) を同梱しているため仕様です。ネットワーク経由で配布する際はファイルサイズに留意してください。
 
 by kayuu(雪癒華)
